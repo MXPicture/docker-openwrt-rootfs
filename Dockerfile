@@ -1,4 +1,6 @@
-FROM openwrtorg/rootfs:latest
+ARG BASE_IMAGE=openwrtorg/rootfs
+ARG BASE_IMAGE_VERSION=latest
+FROM $BASE_IMAGE:$BASE_IMAGE_VERSION
 
 EXPOSE 80
 
