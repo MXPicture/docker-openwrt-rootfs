@@ -1,1 +1,2 @@
-# docker-openwrt-rootfs
+# OpenWRT rootfs Docker Image for Ansible
+installing python3
