@@ -20,7 +20,7 @@ jobs:
 
             const tarImages = (await github.request("https://hub.docker.com/v2/repositories/mxpicture/openwrt-rootfs", {
               headers: {
-                "content-type": "application/json",
+                accept: "application/json",
               }
             })).results
 
