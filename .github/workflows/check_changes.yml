@@ -11,6 +11,8 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      
       - name: Get branches
         id: extract_branches
         run: echo "##[set-output name=branches;]$(git branch)"
