@@ -15,7 +15,7 @@ jobs:
         uses: actions/github-script@v5
         with:
           script: |
-            const opts = github.rest.repos.listBranches(context.repo)
+            const opts = github.rest.repos.listTags(context.repo)
 
             const branches = await github.paginate(opts)
             
