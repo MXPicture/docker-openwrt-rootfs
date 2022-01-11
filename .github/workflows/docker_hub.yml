@@ -1,4 +1,4 @@
-name: ci
+name: Dock Hub Deploy
 
 on:
   repository_dispatch:
