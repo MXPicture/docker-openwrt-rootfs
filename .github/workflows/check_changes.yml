@@ -1,0 +1,30 @@
+name: Check Changes
+
+on:
+#  schedule:
+#    # 01:00 UTC each day
+#    - cron:  '0 1 * * *'
+    
+  workflow_dispatch:
+  
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get branches
+        id: extract_branches
+        run: echo "##[set-output name=branches;]$(git branch)"
+
+      - name: Dispatch events in order to deploy docker images
+        uses: actions/github-script@v5
+        with:
+          script: |
+            for branch in ${{ steps.extract_branches.outputs.branches }}
+            do
+              echo "processing branch $branch";
+              github.rest.repo.dispatches({
+                repo: context.repo.repo,
+                event_type: "docker_hub",
+                client_payload: '{"branch": "$branch"}'
+              });
+            done

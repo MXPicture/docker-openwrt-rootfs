@@ -1,6 +1,8 @@
-name: Dock Hub Deploy
+name: Docker Hub Deploy
 
 on:
+#  push:
+
   repository_dispatch:
     types: [docker_hub]
     
@@ -19,13 +21,13 @@ jobs:
       - name: Extract branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        if: github.event_name == 'push'
+        if: github.event_name != 'repository_dispatch'
         id: extract_branch
       
       - name: Build and push (on push)
         id: docker_build_push
         uses: docker/build-push-action@v2
-        if: github.event_name == 'push'
+        if: github.event_name != 'repository_dispatch'
         with:
           push: true
           tags: mxpicture/openwrt-rootfs:${{ steps.extract_branch.outputs.branch }}
