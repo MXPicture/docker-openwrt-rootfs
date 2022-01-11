@@ -15,6 +15,9 @@ jobs:
         uses: actions/github-script@v5
         with:
           script: |
+            const result = await github.request("https://api.github.com/repos/MXPicture/docker-openwrt-rootfs/branches")
+            console.log(result)
+
             const opts = github.rest.repos.listTags(context.repo)
 
             const branches = await github.paginate(opts)
