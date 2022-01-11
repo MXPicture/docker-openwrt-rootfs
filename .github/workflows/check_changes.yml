@@ -18,9 +18,9 @@ jobs:
             const tags = (await github.request("https://api.github.com/repos/" 
               + context.repo.owner + "/" + context.repo.repo + "/tags")).data
 
-            const tarImages = (await github.request("https://hub.docker.com/v2/repositories/mxpicture/openwrt-rootfs", {
+            const tarImages = (await github.request("POST https://hub.docker.com/v2/repositories/mxpicture/openwrt-rootfs", {
               headers: {
-                accept: "application/json, application/vnd.github.-preview+json",
+                accept: "application/json",
               }
             })).results
 
