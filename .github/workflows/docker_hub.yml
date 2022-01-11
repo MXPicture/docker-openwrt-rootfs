@@ -1,8 +1,11 @@
 name: ci
 
 on:
-  push:
-
+  repository_dispatch:
+    types: [docker_hub]
+    
+  workflow_dispatch:
+  
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -16,12 +19,23 @@ jobs:
       - name: Extract branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        if: github.event_name == 'push'
         id: extract_branch
       
-      - name: Build and push
-        id: docker_build
+      - name: Build and push (on push)
+        id: docker_build_push
         uses: docker/build-push-action@v2
+        if: github.event_name == 'push'
         with:
           push: true
           tags: mxpicture/openwrt-rootfs:${{ steps.extract_branch.outputs.branch }}
           build-args: "BASE_IMAGE_VERSION=${{ steps.extract_branch.outputs.branch }}"
+          
+      - name: Build and push (on dispatch)
+        id: docker_build_dispatch
+        uses: docker/build-push-action@v2
+        if: github.event_name == 'repository_dispatch'
+        with:
+          push: true
+          tags: mxpicture/openwrt-rootfs:${{ github.event.client_payload.branch }}
+          build-args: "BASE_IMAGE_VERSION=${{ github.event.client_payload.branch }}
