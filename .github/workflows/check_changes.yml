@@ -18,7 +18,7 @@ jobs:
             const opts = github.rest.repos.listBranches(context.repo)
 
             const branches = await github.paginate(opts)
-
+            console.log(branches)
             for (const branch of branches) {
               console.log(branch)
             }
