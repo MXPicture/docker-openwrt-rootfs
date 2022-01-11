@@ -11,23 +11,10 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Get branches
-        id: extract_branches
-        run: echo "##[set-output name=branches;]$(git branch)"
-
-      - name: Dispatch events in order to deploy docker images
+      - name: Get branches & Dispatch events in order to deploy docker images
         uses: actions/github-script@v5
         with:
           script: |
-            echo ${{ steps.extract_branches.outputs.branches }}
-            for branch in ${{ steps.extract_branches.outputs.branches }}
-            do
-              echo "processing branch $branch";
-              github.rest.repo.dispatches({
-                repo: context.repo.repo,
-                event_type: "docker_hub",
-                client_payload: '{"branch": "$branch"}'
-              });
-            done
+            const branches = github.rest.branches()
+            echo branches
+            
