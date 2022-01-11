@@ -38,4 +38,4 @@ jobs:
         with:
           push: true
           tags: mxpicture/openwrt-rootfs:${{ github.event.client_payload.branch }}
-          build-args: "BASE_IMAGE_VERSION=${{ github.event.client_payload.branch }}
+          build-args: "BASE_IMAGE_VERSION=${{ github.event.client_payload.branch }}"
