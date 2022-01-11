@@ -18,7 +18,10 @@ jobs:
             const tags = (await github.request("https://api.github.com/repos/" 
               + context.repo.owner + "/" + context.repo.repo + "/tags")).data
 
-            const tarImages = (await github.request("https://hub.docker.com/v2/repositories/mxpicture/openwrt-rootfs/tags")).results
+            const tarImages = (await github.request("https://hub.docker.com/v2/repositories/mxpicture/openwrt-rootfs/tags",
+              headers: {
+                content-type: "application/json"
+              })).results
             console.log(tarImages)
             for (const tag of tags) {
               console.log(tag.name)
