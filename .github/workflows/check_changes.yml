@@ -14,11 +14,14 @@ jobs:
       - name: View context attributes
         uses: actions/github-script@v5
         with:
-          script: console.log(context)
-      - name: Get branches & Dispatch events in order to deploy docker images
-        uses: actions/github-script@v5
-        with:
           script: |
-            const branches = $(https://api.github.com/repos/MXPicture/docker-openwrt-rootfs/branches)
-            console.log(branches)
-            
+            const opts = github.rest.repos.listBranches({
+              owner: context.actor,
+              repo: context.repository.name,
+            })
+
+            const branches = await github.paginate(opts)
+
+            for (const branch of branches) {
+              console.log(branch)
+            }
