@@ -11,12 +11,18 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: mxpicture
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
       - name: Docker target get tags
         id: target_tags
         uses: fjogeleit/http-request-action@master
         with:
           url: "https://hub.docker.com/v2/repositories/mxpicture/openwrt-rootfs/tags"
-          customHeaders: '{ "Accept": "application/json" }'
+          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
 
       - run: |
           echo "${{ steps.target_tags.outputs }}"
