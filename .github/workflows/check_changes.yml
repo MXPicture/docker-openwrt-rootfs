@@ -7,6 +7,9 @@ on:
   
 #  push:
 
+  repository_dispatch:
+    types: [check_changes]
+
   workflow_dispatch:
   
 jobs:
@@ -27,9 +30,11 @@ jobs:
           repository: openwrtorg/rootfs
           max_items: "999999"
 
-      - name: Get tags, compare docker hub image dates and trigger deploy
+      - name: Get tags, compare docker hub image dates
         uses: actions/github-script@v5
+        id: script
         with:
+          result-encoding: string
           script: |
             const tags = (await github.request("https://api.github.com/repos/" 
               + context.repo.owner + "/" + context.repo.repo + "/tags")).data
@@ -45,21 +50,27 @@ jobs:
                   for (const source_tag of source_tags) {
                     if ( source_tag.name === target_tag.name && source_tag.last_updated > target_tag.last_updated ) {
                       console.log("Trigger event for tag: " + tag.name)
+                      return tag.name
 
-                      try {
-                        await github.rest.repos.createDispatchEvent({
-                          owner: context.repo.owner,
-                          repo: context.repo.repo,
-                          event_type: "docker_hub",
-                          client_payload: {
-                            tag: tag.name
-                          }
-                        })
-                      } catch (error) {
-                        console.log(error.message)
-                      }
+                      await github.rest.repos.createDispatchEvent({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        event_type: "docker_hub",
+                        client_payload: {
+                          tag: tag.name
+                        }
+                      })
                     }
                   }  
                 }
               }
             }
+        
+      - name: Dispatch deploy
+        uses: peter-evans/repository-dispatch@v1
+        if: github.event.client_payload.check_again == 'true'
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: docker_hub
+          client-payload: '{"tag": "${{ steps.script.outputs }}"}'
