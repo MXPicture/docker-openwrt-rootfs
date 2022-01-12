@@ -70,7 +70,7 @@ jobs:
         
       - name: Dispatch deploy
         uses: peter-evans/repository-dispatch@v1
-        if: steps.script.outputs = ''
+        if: steps.script.outputs != ''
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: ${{ github.repository }}
