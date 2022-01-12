@@ -17,11 +17,11 @@ jobs:
             const tags = (await github.request("https://api.github.com/repos/" 
               + context.repo.owner + "/" + context.repo.repo + "/tags")).data
 
-            return tags
+            return tags.toString()
 
       - name: set matrix
         id: set_matrix
-        run: echo "::set-output name=matrix::${{ toJSON(steps.get.outputs.result) }}"
+        run: echo "::set-output name=matrix::${{ steps.get.outputs.result }}"
 
   dispatch:
     needs: get_tags
