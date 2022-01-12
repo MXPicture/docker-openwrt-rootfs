@@ -11,21 +11,14 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: Login to DockerHub
-        uses: docker/login-action@v1 
+      - name: Docker target meta
+        id: target_meta
+        uses: David-Lor/action-dockerhub-get-tag-metadata@0.1.1
         with:
-          username: mxpicture
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Docker target get tags
-        id: target_tags
-        uses: fjogeleit/http-request-action@master
-        with:
-          url: "https://registry.hub.docker.com/v2/repositories/mxpicture/openwrt-rootfs/tags"
-          customHeaders: '{ "Accept": "application/json", "Content-Type": "application/json" }'
+          image: mxpicture/openwrt-rootfs
 
       - run: |
-          echo "${{ steps.target_tags.outputs }}"
+          echo "${{ steps.target_meta.outputs }}"
 
       - name: Get tags, compare docker hub image dates and trigger deploy
         uses: actions/github-script@v5
