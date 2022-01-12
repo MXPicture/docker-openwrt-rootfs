@@ -16,14 +16,14 @@ jobs:
         uses: mxpicture/action-docker-hub-fetch-tags@v1.0.3
         with:
           repository: mxpicture/openwrt-rootfs
-          max_items: 999999
+          max_items: "999999"
 
       - name: Docker source tags
         id: fetch_source_tags
         uses: mxpicture/action-docker-hub-fetch-tags@v1.0.3
         with:
           repository: openwrtorg/rootfs
-          max_items: 999999
+          max_items: "999999"
 
       - name: Get tags, compare docker hub image dates and trigger deploy
         uses: actions/github-script@v5
