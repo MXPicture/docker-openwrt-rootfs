@@ -26,8 +26,9 @@ jobs:
             const tags = (await github.request("https://api.github.com/repos/" 
               + context.repo.owner + "/" + context.repo.repo + "/tags")).data
 
-
-            console.log(${{ steps.meta.outputs }})
+            const target_tags = ${{ steps.fetch_tags.outputs.results }}
+            console.log(target_tags)
+            
             for (const tag of tags) {
               console.log(tag.name)
 
