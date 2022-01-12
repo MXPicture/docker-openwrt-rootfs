@@ -11,12 +11,11 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: get target tags
-        uses: CamiloGarciaLaRotta/watermelon-http-client@v1
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
         with:
-          url: "https://hub.docker.com/v2/repositories/mxpicture/openwrt-rootfs"
-          headers:
-            accept: "application/json"
+          images: mxpicture/openwrt-rootfs
 
       - name: Get tags, compare docker hub image dates and trigger deploy
         uses: actions/github-script@v5
@@ -25,9 +24,8 @@ jobs:
             const tags = (await github.request("https://api.github.com/repos/" 
               + context.repo.owner + "/" + context.repo.repo + "/tags")).data
 
-          
 
-            console.log(tarImages)
+            console.log(${{ steps.meta.outputs.tags }})
             for (const tag of tags) {
               console.log(tag.name)
 
