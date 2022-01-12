@@ -20,7 +20,7 @@ jobs:
             let output = []
             
             for(let i=0; i<tags.length; i++) {
-              output.push({ "name": tags[i] })
+              output.push({ "name": tags[i].name })
             }
 
             return JSON.stringify(output)
