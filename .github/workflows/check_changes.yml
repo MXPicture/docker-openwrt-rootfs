@@ -12,10 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Docker target meta
-        id: target_meta
-        uses: theo-brown/fetch-dockerhub-metadata@v1
+        id: fetch_tags
+        uses: mxpicture/action-docker-hub-fetch-tags@v1
         with:
           repository: mxpicture/openwrt-rootfs
+
+      - run: echo ${{ steps.fetch_tags.outputs.count }}
 
       - name: Get tags, compare docker hub image dates and trigger deploy
         uses: actions/github-script@v5
