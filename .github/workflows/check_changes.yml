@@ -25,7 +25,7 @@ jobs:
               + context.repo.owner + "/" + context.repo.repo + "/tags")).data
 
 
-            console.log(${{ steps.meta.outputs.tags }})
+            console.log(${{ steps.meta.outputs }})
             for (const tag of tags) {
               console.log(tag.name)
 
