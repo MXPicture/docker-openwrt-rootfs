@@ -34,6 +34,8 @@ jobs:
 
             const target_tags = ${{ steps.fetch_target_tags.outputs.results }}
             const source_tags = ${{ steps.fetch_source_tags.outputs.results }}
+            console.log(target_tags)
+            console.log(source_tags)
 
             for (const tag of tags) {
               console.log("Processing tag: " + tag.name)
