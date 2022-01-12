@@ -47,7 +47,7 @@ jobs:
 
               for (const source_tag of source_tags) {
                 if ( source_tag.name === tag.name ) {
-                  const found = false
+                  let found = false
 
                   for (const target_tag of target_tags) {
                     if ( source_tag.name === target_tag.name ) {
