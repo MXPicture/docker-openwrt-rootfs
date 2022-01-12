@@ -17,7 +17,8 @@ jobs:
         with:
           images: mxpicture/openwrt-rootfs
 
-      - run: echo "::debug:: ${{ steps.meta.outputs }}"
+      - run: |
+          echo "${{ steps.meta.outputs }}"
 
       - name: Get tags, compare docker hub image dates and trigger deploy
         uses: actions/github-script@v5
