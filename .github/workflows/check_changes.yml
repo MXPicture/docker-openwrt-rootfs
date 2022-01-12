@@ -4,7 +4,9 @@ on:
 #  schedule:
 #    # 01:00 UTC each day
 #    - cron:  '0 1 * * *'
-    
+  
+#  push:
+
   workflow_dispatch:
   
 jobs:
@@ -42,7 +44,16 @@ jobs:
                 if ( target_tag.name === tag.name ) {
                   for (const source_tag of source_tags) {
                     if ( source_tag.name === target_tag.name && source_tag.last_updated > target_tag.last_updated ) {
-                      console.log("Push tag: " + tag.name)
+                      console.log("Trigger event for tag: " + tag.name)
+
+                      github.rest.repos.createDispatchEvent({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        event_type: "docker_hub",
+                        client_payload: {
+                          tag: tag.name
+                        }
+                      })
                     }
                   }  
                 }

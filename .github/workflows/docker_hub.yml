@@ -1,8 +1,6 @@
 name: Docker Hub Deploy
 
 on:
-#  push:
-
   repository_dispatch:
     types: [docker_hub]
     
@@ -20,11 +18,11 @@ jobs:
           username: mxpicture
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           
-      - name: Extract branch name
+      - name: Extract tag name
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/*/})"
         if: github.event_name != 'repository_dispatch'
-        id: extract_branch
+        id: extract_tag
       
       - name: Build and push (on push)
         id: docker_build_push
@@ -32,8 +30,8 @@ jobs:
         if: github.event_name != 'repository_dispatch'
         with:
           push: true
-          tags: mxpicture/openwrt-rootfs:${{ steps.extract_branch.outputs.branch }}
-          build-args: "BASE_IMAGE_VERSION=${{ steps.extract_branch.outputs.branch }}"
+          tags: mxpicture/openwrt-rootfs:${{ steps.extract_tag.outputs.tag }}
+          build-args: "BASE_IMAGE_VERSION=${{ steps.extract_tag.outputs.tag }}"
           
       - name: Build and push (on dispatch)
         id: docker_build_dispatch
@@ -41,5 +39,5 @@ jobs:
         if: github.event_name == 'repository_dispatch'
         with:
           push: true
-          tags: mxpicture/openwrt-rootfs:${{ github.event.client_payload.branch }}
-          build-args: "BASE_IMAGE_VERSION=${{ github.event.client_payload.branch }}"
+          tags: mxpicture/openwrt-rootfs:${{ github.event.client_payload.tag }}
+          build-args: "BASE_IMAGE_VERSION=${{ github.event.client_payload.tag }}"
