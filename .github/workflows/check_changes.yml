@@ -34,19 +34,15 @@ jobs:
 
             const target_tags = ${{ steps.fetch_target_tags.outputs.results }}
             const source_tags = ${{ steps.fetch_source_tags.outputs.results }}
-            console.log(target_tags)
-            console.log(source_tags)
 
             for (const tag of tags) {
               console.log("Processing tag: " + tag.name)
 
               for (const target_tag of target_tags) {
-                if ( target_tag.name === tag ) {
+                if ( target_tag.name === tag.name ) {
                   for (const source_tag of source_tags) {
-                    if ( source_tag.name === target_tag.name ) {
+                    if ( source_tag.name === target_tag.name && source_tag.last_updated > target_tag.last_updated ) {
                       console.log("Push tag: " + tag.name)
-                      console.log("source: " + source_tag.last_updated)
-                      console.log("target: " + target_tag.last_updated)
                     }
                   }  
                 }
