@@ -11,16 +11,15 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v3
+      - name: Docker target get tags
+        id: target_tags
+        uses: fjogeleit/http-request-action@master
         with:
-          images: mxpicture/openwrt-rootfs
-          tags: |
-            type=match,pattern=.*
+          url: "https://hub.docker.com/v2/repositories/mxpicture/openwrt-rootfs/tags"
+          customHeaders: '{ accept: "application/json" }'
 
       - run: |
-          echo "${{ steps.meta.outputs }}"
+          echo "${{ steps.target_tags.outputs }}"
 
       - name: Get tags, compare docker hub image dates and trigger deploy
         uses: actions/github-script@v5
