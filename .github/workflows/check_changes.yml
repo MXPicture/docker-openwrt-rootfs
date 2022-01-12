@@ -45,11 +45,11 @@ jobs:
             for (const tag of tags) {
               console.log("Processing tag: " + tag.name)
 
-              for (const target_tag of target_tags) {
-                if ( target_tag.name === tag.name ) {
+              for (const source_tag of source_tags) {
+                if ( source_tag.name === tag.name ) {
                   const found = false
 
-                  for (const source_tag of source_tags) {
+                  for (const target_tag of target_tags) {
                     if ( source_tag.name === target_tag.name ) {
                       found = true
                     }
