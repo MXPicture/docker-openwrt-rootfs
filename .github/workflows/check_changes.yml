@@ -47,9 +47,12 @@ jobs:
 
               for (const target_tag of target_tags) {
                 if ( target_tag.name === tag.name ) {
+                  const found = false
+
                   for (const source_tag of source_tags) {
                     if ( source_tag.name === target_tag.name && source_tag.last_updated > target_tag.last_updated ) {
                       console.log("Trigger event for tag: " + tag.name)
+                      found = true
                       return tag.name
 
                       await github.rest.repos.createDispatchEvent({
@@ -61,7 +64,11 @@ jobs:
                         }
                       })
                     }
-                  }  
+                  } 
+
+                  if (found != true) {
+                    return tag.name
+                  } 
                 }
               }
             }
@@ -75,4 +82,4 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: ${{ github.repository }}
           event-type: docker_hub
-          client-payload: '{"tag": "${{ steps.script.outputs.result }}"}'
+          client-payload: '{"tag": "${{ steps.script.outputs.result }}", "check_again": "true"}'
