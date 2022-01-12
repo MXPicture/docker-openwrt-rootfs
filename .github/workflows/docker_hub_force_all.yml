@@ -1,0 +1,38 @@
+name: Force deploy all
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  get_tags:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Get tags
+        uses: actions/github-script@v5
+        id: script
+        with:
+          script: |
+            const tags = (await github.request("https://api.github.com/repos/" 
+              + context.repo.owner + "/" + context.repo.repo + "/tags")).data
+
+            return tags
+
+      - name: set matrix
+        id: set_matrix
+        run: echo "::set-output name=matrix::${{ toJSON(steps.get.outputs.result) }}"
+
+  dispatch:
+    needs: get_tags
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{fromJSON(needs.job1.outputs.matrix)}}
+    steps:
+      - name: Dispatch deploy
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: docker_hub
+          client-payload: '{"tag": "${{ matrix.name }}"}'
