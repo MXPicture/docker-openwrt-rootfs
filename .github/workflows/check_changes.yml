@@ -41,8 +41,10 @@ jobs:
               for (const target_tag of target_tags) {
                 if ( target_tag.name === tag ) {
                   for (const source_tag of source_tags) {
-                    if ( source_tag.name === target_tag.name && source_tag.last_updated > target_tag.last_updated ) {
+                    if ( source_tag.name === target_tag.name ) {
                       console.log("Push tag: " + tag.name)
+                      console.log("source: " + source_tag.last_updated)
+                      console.log("target: " + target_tag.last_updated)
                     }
                   }  
                 }
