@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Get tags
         uses: actions/github-script@v5
-        id: script
+        id: get
         with:
           script: |
             const tags = (await github.request("https://api.github.com/repos/" 
