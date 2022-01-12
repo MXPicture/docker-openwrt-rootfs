@@ -46,7 +46,7 @@ jobs:
                     if ( source_tag.name === target_tag.name && source_tag.last_updated > target_tag.last_updated ) {
                       console.log("Trigger event for tag: " + tag.name)
 
-                      github.rest.repos.createDispatchEvent({
+                      await github.rest.repos.createDispatchEvent({
                         owner: context.repo.owner,
                         repo: context.repo.repo,
                         event_type: "docker_hub",
