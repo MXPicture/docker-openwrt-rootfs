@@ -47,7 +47,7 @@ jobs:
                       console.log("Trigger event for tag: " + tag.name)
 
                       try {
-                        await github.rest.repos.createDispatchEvent({
+                        await github.repos.createDispatchEvent({
                           owner: context.repo.owner,
                           repo: context.repo.repo,
                           event_type: "docker_hub",
