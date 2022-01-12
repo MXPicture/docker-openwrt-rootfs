@@ -17,13 +17,16 @@ jobs:
             const tags = (await github.request("https://api.github.com/repos/" 
               + context.repo.owner + "/" + context.repo.repo + "/tags")).data
             
-            let output = []
+            let output = ""
             
             for(let i=0; i<tags.length; i++) {
-              output.push({ "name": tags[i].name })
+              if(output != "") {
+                output += ","
+              }
+              output += JSON.stringify({ "name": tags[i].name })
             }
 
-            return JSON.stringify(output)
+            return output
 
   
   dispatch:
