@@ -65,10 +65,12 @@ jobs:
                 }
               }
             }
+
+            return ""
         
       - name: Dispatch deploy
         uses: peter-evans/repository-dispatch@v1
-        if: github.event.client_payload.check_again == 'true'
+        if: steps.script.outputs = ''
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: ${{ github.repository }}
