@@ -13,12 +13,9 @@ jobs:
     steps:
       - name: Docker target meta
         id: target_meta
-        uses: David-Lor/action-dockerhub-get-tag-metadata@0.1.1
+        uses: theo-brown/fetch-dockerhub-metadata@v1
         with:
-          image: mxpicture/openwrt-rootfs
-
-      - run: |
-          echo "${{ steps.target_meta.outputs }}"
+          repository: mxpicture/openwrt-rootfs
 
       - name: Get tags, compare docker hub image dates and trigger deploy
         uses: actions/github-script@v5
