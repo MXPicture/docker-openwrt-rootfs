@@ -70,9 +70,9 @@ jobs:
         
       - name: Dispatch deploy
         uses: peter-evans/repository-dispatch@v1
-        if: steps.script.outputs != ''
+        if: steps.script.outputs.result != ''
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: ${{ github.repository }}
           event-type: docker_hub
-          client-payload: '{"tag": "${{ steps.script.outputs }}"}'
+          client-payload: '{"tag": "${{ steps.script.outputs.result }}"}'
