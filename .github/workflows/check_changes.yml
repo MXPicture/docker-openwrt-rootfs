@@ -11,13 +11,17 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: Docker target meta
-        id: fetch_tags
+      - name: Docker target tags
+        id: fetch_target_tags
         uses: mxpicture/action-docker-hub-fetch-tags@v1.0.2
         with:
           repository: mxpicture/openwrt-rootfs
 
-      - run: echo ${{ steps.fetch_tags.outputs.count }}
+      - name: Docker target tags
+        id: fetch_source_tags
+        uses: mxpicture/action-docker-hub-fetch-tags@v1.0.2
+        with:
+          repository: openwrtorg/rootfs
 
       - name: Get tags, compare docker hub image dates and trigger deploy
         uses: actions/github-script@v5
@@ -26,10 +30,22 @@ jobs:
             const tags = (await github.request("https://api.github.com/repos/" 
               + context.repo.owner + "/" + context.repo.repo + "/tags")).data
 
-            const target_tags = ${{ steps.fetch_tags.outputs.results }}
+            const target_tags = ${{ steps.fetch_target_tags.outputs.results }}
             console.log(target_tags)
-            
-            for (const tag of tags) {
-              console.log(tag.name)
 
+            const source_tags = ${{ steps.fetch_source_tags.outputs.results }}
+            console.log(source_tags)
+
+            for (const tag of tags) {
+              console.log("Processing tag: " + tag.name)
+
+              for (const target_tag of target_tags) {
+                if ( target_tag.name === tag ) {
+                  for (const source_tag of source_tags) {
+                    if ( source_tag.name === target_tag.name && source_tag.last_updated > target_tag.last_updated ) {
+                      console.log("Push tag: " + tag.name)
+                    }
+                  }  
+                }
+              }
             }
