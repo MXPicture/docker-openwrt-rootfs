@@ -50,19 +50,13 @@ jobs:
                   const found = false
 
                   for (const source_tag of source_tags) {
-                    if ( source_tag.name === target_tag.name && source_tag.last_updated > target_tag.last_updated ) {
-                      console.log("Trigger event for tag: " + tag.name)
+                    if ( source_tag.name === target_tag.name ) {
                       found = true
-                      return tag.name
+                    }
 
-                      await github.rest.repos.createDispatchEvent({
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        event_type: "docker_hub",
-                        client_payload: {
-                          tag: tag.name
-                        }
-                      })
+                    if ( source_tag.last_updated > target_tag.last_updated ) {
+                      console.log("Trigger event for tag: " + tag.name)
+                      return tag.name
                     }
                   } 
 
