@@ -16,6 +16,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: mxpicture/openwrt-rootfs
+          tags: "type=match,pattern=.*"
 
       - run: |
           echo "${{ steps.meta.outputs }}"
