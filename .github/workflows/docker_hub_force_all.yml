@@ -7,7 +7,7 @@ jobs:
   get_tags:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: ${{ steps.get.outputs.result }}
     steps:
       - name: Get tags
         uses: actions/github-script@v5
@@ -25,10 +25,7 @@ jobs:
 
             return JSON.stringify(output)
 
-      - name: set matrix
-        id: set_matrix
-        run: echo "::set-output name=matrix::${{ steps.get.outputs.result }}"
-
+  
   dispatch:
     needs: get_tags
     runs-on: ubuntu-latest
