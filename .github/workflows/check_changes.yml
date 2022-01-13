@@ -66,6 +66,7 @@ jobs:
                   } 
 
                   if (found != true) {
+                    console.log("Trigger event for tag: " + tag.name)
                     output.push({ "name": tag.name })
                   } 
                 }
