@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: 
-        tag: ${{ needs.get_tags.outputs }}
+        tag: ${{ needs.get_tags.outputs.tags }}
     steps:
       - name: Dispatch deploy
         uses: peter-evans/repository-dispatch@v1
