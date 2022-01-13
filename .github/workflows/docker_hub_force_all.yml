@@ -45,8 +45,7 @@ jobs:
       - echo_matrix
     runs-on: ubuntu-latest
     strategy:
-      matrix: 
-        tag: ${{ fromJSON(needs.echo_matrix.outputs.tags) }}
+      matrix: ${{ fromJSON(needs.echo_matrix.outputs) }}
     steps:
       - name: Dispatch deploy
         uses: peter-evans/repository-dispatch@v1
