@@ -8,14 +8,13 @@ on:
   push:
     tags: ['*']
 
-  repository_dispatch:
-    types: [check_changes]
-
   workflow_dispatch:
   
 jobs:
   check:
     runs-on: ubuntu-latest
+    outputs:
+      tags: ${{ steps.script.outputs.result }}
     steps:
       - name: Docker target tags
         id: fetch_target_tags
@@ -43,6 +42,8 @@ jobs:
             const target_tags = ${{ steps.fetch_target_tags.outputs.results }}
             const source_tags = ${{ steps.fetch_source_tags.outputs.results }}
 
+            let output = []
+
             for (const tag of tags) {
               console.log("Processing tag: " + tag.name)
 
@@ -59,25 +60,31 @@ jobs:
 
                       if ( source_tag.last_updated > target_tag.last_updated ) {
                         console.log("Trigger event for tag: " + tag.name)
-                        return tag.name
+                        output.push({ "name": tag.name })
                       }
                     }
                   } 
 
                   if (found != true) {
-                    return tag.name
+                    output.push({ "name": tag.name })
                   } 
                 }
               }
             }
 
-            return ""
+            return output
         
+  dispatch:
+    needs: check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        tag: ${{ fromJSON(needs.check.outputs.tags) }}
+    steps:
       - name: Dispatch deploy
         uses: peter-evans/repository-dispatch@v1
-        if: steps.script.outputs.result != ''
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: ${{ github.repository }}
           event-type: docker_hub
-          client-payload: '{"tag": "${{ steps.script.outputs.result }}", "check_again": "true"}'
+          client-payload: '{"tag": "${{ matrix.tag.name }}"}'

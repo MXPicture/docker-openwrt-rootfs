@@ -24,25 +24,9 @@ jobs:
             }
 
             return output
-
-      - name: Generate Matrix
-        id: generate_matrix
-        run: |
-          TAGS='${{ toJSON(steps.get.outputs.result) }}'
-          echo ::set-output name=tags::${TAGS}
-
-  echo_matrix:
-    runs-on: ubuntu-latest
-    needs:
-      - get_tags
-    steps:
-      - name: Echo previous outputs
-        run: echo "${{ toJSON(needs.get_tags.outputs) }}"
   
   dispatch:
-    needs: 
-      - get_tags
-      - echo_matrix
+    needs: get_tags
     runs-on: ubuntu-latest
     strategy:
       matrix: 
@@ -54,4 +38,4 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: ${{ github.repository }}
           event-type: docker_hub
-          client-payload: '{"tag": "${{ matrix.tag }}"}'
+          client-payload: '{"tag": "${{ matrix.tag.name }}"}'

@@ -41,11 +41,3 @@ jobs:
           push: true
           tags: mxpicture/openwrt-rootfs:${{ github.event.client_payload.tag }}
           build-args: "BASE_IMAGE_VERSION=${{ github.event.client_payload.tag }}"
-
-      - name: Dispatch check changes
-        uses: peter-evans/repository-dispatch@v1
-        if: github.event.client_payload.check_again == 'true'
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          repository: ${{ github.repository }}
-          event-type: check_changes
