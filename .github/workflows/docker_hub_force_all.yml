@@ -31,7 +31,7 @@ jobs:
     needs: get_tags
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJSON(needs.get_tags.outputs.matrix) }}
+      matrix: ${{ needs.get_tags.outputs.matrix }}
     steps:
       - name: Dispatch deploy
         uses: peter-evans/repository-dispatch@v1
