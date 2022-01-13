@@ -7,7 +7,7 @@ jobs:
   get_tags:
     runs-on: ubuntu-latest
     outputs:
-      tags: ${{ steps.generate_matrix.outputs.tags }}
+      tags: ${{ steps.get.outputs.result }}
     steps:
       - name: Get tags
         uses: actions/github-script@v5
@@ -41,7 +41,6 @@ jobs:
   
   dispatch:
     needs: 
-      - get_tags
       - echo_matrix
     runs-on: ubuntu-latest
     strategy:
