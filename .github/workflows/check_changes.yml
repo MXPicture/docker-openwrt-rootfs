@@ -2,8 +2,8 @@ name: Check Changes
 
 on:
   schedule:
-    # 01:00 UTC each day
-    - cron:  '0 1 * * *'
+    # 07:00 UTC each day
+    - cron:  '0 7 * * *'
   
   push:
     tags: ['*']
