@@ -7,7 +7,7 @@ jobs:
   get_tags:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.get.outputs.result }}
+      tags: ${{ steps.generate_matrix.outputs.tags }}
     steps:
       - name: Get tags
         uses: actions/github-script@v5
@@ -17,21 +17,36 @@ jobs:
             const tags = (await github.request("https://api.github.com/repos/" 
               + context.repo.owner + "/" + context.repo.repo + "/tags")).data
             
-            let output = "{\"package\":["
+            let output = []
             
             for(let i=0; i<tags.length; i++) {
-              output += "{\"name\":\"" + tags[i].name + "\"}"
+              output.push({ "name": tags[i].name })
             }
 
-            output += "]}"
-
             return output
+
+      - name: Generate Matrix
+        id: generate_matrix
+        run: |
+          TAGS='${{ toJSON(steps.get.outputs.result) }}'
+          echo ::set-output name=tags::${TAGS}
+
+  echo_matrix:
+    runs-on: ubuntu-latest
+    needs:
+      - get_tags
+    steps:
+      - name: Echo previous outputs
+        run: echo "${{ toJSON(needs.get_tags.outputs) }}"
   
   dispatch:
-    needs: get_tags
+    needs: 
+      - get_tags
+      - echo_matrix
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJSON(needs.get_tags.outputs.matrix) }}
+      matrix: 
+        tag: ${{ fromJSON(needs.echo_matrix.outputs.tags) }}
     steps:
       - name: Dispatch deploy
         uses: peter-evans/repository-dispatch@v1
@@ -39,4 +54,4 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: ${{ github.repository }}
           event-type: docker_hub
-          client-payload: '{"tag": "${{ matrix.name }}"}'
+          client-payload: '{"tag": "${{ matrix.tag.name }}"}'
