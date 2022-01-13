@@ -41,10 +41,11 @@ jobs:
   
   dispatch:
     needs: 
+      - get_tags
       - echo_matrix
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJSON(needs.echo_matrix.outputs) }}
+      matrix: ${{ needs.get_tags.outputs }}
     steps:
       - name: Dispatch deploy
         uses: peter-evans/repository-dispatch@v1
