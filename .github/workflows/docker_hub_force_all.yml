@@ -17,7 +17,7 @@ jobs:
             const tags = (await github.request("https://api.github.com/repos/" 
               + context.repo.owner + "/" + context.repo.repo + "/tags")).data
             
-            let output = "::set-output name=matrix::{\"include\":[
+            let output = "::set-output name=matrix::{\"include\":["
             
             for(let i=0; i<tags.length; i++) {
               output += "{\"name\":\"" + tags[i].name + "\"}"
