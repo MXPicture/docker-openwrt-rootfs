@@ -20,7 +20,7 @@ jobs:
             let output = []
             
             for(let i=0; i<tags.length; i++) {
-              output.push({ "name": tags[i].name })
+              output.push(tags[i].name)
             }
 
             return output
@@ -54,4 +54,4 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: ${{ github.repository }}
           event-type: docker_hub
-          client-payload: '{"tag": "${{ matrix.tag.name }}"}'
+          client-payload: '{"tag": "${{ matrix.tag }}"}'
