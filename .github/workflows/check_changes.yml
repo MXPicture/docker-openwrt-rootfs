@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tags: ${{ steps.get.outputs.result }}
+      empty_tags: ${{ steps.check.outputs.result }}
     steps:
       - name: Docker target tags
         id: fetch_target_tags
@@ -73,9 +74,23 @@ jobs:
             }
 
             return output
-        
+
+      - name: Check tags empty
+        uses: actions/github-script@v5
+        id: check
+        with:
+          script: |
+            let output = ${{ steps.get.outputs.result }}
+            
+            if (output.length == 0) {
+              return 'true'
+            } else {
+              return 'false'
+            }
+
   dispatch:
     needs: get_tags
+    if: ${{ needs.get_tags.outputs.empty_tags == 'false' }}
     runs-on: ubuntu-latest
     strategy:
       matrix: 
