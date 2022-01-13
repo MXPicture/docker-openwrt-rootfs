@@ -11,10 +11,10 @@ on:
   workflow_dispatch:
   
 jobs:
-  check:
+  get_tags:
     runs-on: ubuntu-latest
     outputs:
-      tags: ${{ steps.script.outputs.result }}
+      tags: ${{ steps.get.outputs.result }}
     steps:
       - name: Docker target tags
         id: fetch_target_tags
@@ -32,7 +32,7 @@ jobs:
 
       - name: Get tags, compare docker hub image dates
         uses: actions/github-script@v5
-        id: script
+        id: get
         with:
           result-encoding: string
           script: |
@@ -76,11 +76,11 @@ jobs:
             return output
         
   dispatch:
-    needs: check
+    needs: get_tags
     runs-on: ubuntu-latest
     strategy:
       matrix: 
-        tag: ${{ fromJSON(needs.check.outputs.tags) }}
+        tag: ${{ fromJSON(needs.get_tags.outputs.tags) }}
     steps:
       - name: Dispatch deploy
         uses: peter-evans/repository-dispatch@v1
