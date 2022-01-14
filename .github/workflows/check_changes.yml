@@ -19,14 +19,14 @@ jobs:
     steps:
       - name: Docker target tags
         id: fetch_target_tags
-        uses: mxpicture/action-docker-hub-fetch-tags@v1.0.3
+        uses: mxpicture/action-docker-hub-fetch-tags@v1
         with:
           repository: mxpicture/openwrt-rootfs
           max_items: "999999"
 
       - name: Docker source tags
         id: fetch_source_tags
-        uses: mxpicture/action-docker-hub-fetch-tags@v1.0.3
+        uses: mxpicture/action-docker-hub-fetch-tags@v1
         with:
           repository: openwrtorg/rootfs
           max_items: "999999"
