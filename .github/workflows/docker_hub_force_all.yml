@@ -44,7 +44,7 @@ jobs:
 
   dispatch:
     needs: get_tags
-    if: ${{ needs.get_tags.outputs.empty_tags == 'false' }}
+    if: ${{ fromJSON(needs.get_tags.outputs.empty_tags) == 'false' }}
     runs-on: ubuntu-latest
     strategy:
       matrix: 
