@@ -81,10 +81,13 @@ jobs:
         with:
           script: |
             let output = ${{ steps.get.outputs.result }}
+            console.log("Count tags: " + (output.length)
             
             if (output.length == 0) {
+              console.log("empty")
               return 'true'
             } else {
+            console.log("not empty")
               return 'false'
             }
 
